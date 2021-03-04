@@ -1,5 +1,5 @@
 import numpy as np
-from tensorboardX import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 import torch
 import torch.optim
 import torch.nn as nn
@@ -19,6 +19,8 @@ os.environ["CUDA_VISIBLE_DEVICES"]="1"
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+# import pydevd_pycharm
+# pydevd_pycharm.settrace('vislab-03', port=12345, stdoutToServer=True, stderrToServer=True)
 
 IMG_SIZE = 128
 S_SIZE = 40
@@ -30,9 +32,9 @@ RESTRICT_VAL = 0.01
 fname = "train_LCM"
 NUM_TRAIN_SAMPLES = 150000
 
-LOG_DIR = '../runs/LCM_CelebA/'
+MODEL_NAME = 'CelebA150k_LCM_128'
+LOG_DIR = os.path.join("../runs", MODEL_NAME)
 
-MODEL_NAME = 'CelebA150k_LCM'
 
 LATENT_CHECK_DIR = '../' + MODEL_NAME + '_latentDIR/'
 
@@ -55,7 +57,7 @@ np.save(MODEL_NAME + '_commoninput', s.data.numpy())
 
 writer = SummaryWriter(log_dir=LOG_DIR)
 
-dataset_folder = '../celebA_split/train/'
+dataset_folder = '/cs/snapless/raananf/cbnaya/dataset/celebA/train/img/'
 
 data_reader = DataReader_Disk(dataset_folder=dataset_folder,
                               device=device,

@@ -1,5 +1,5 @@
 import numpy as np
-from tensorboardX import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 import scipy.misc
 from os import listdir
 from os.path import isfile, join
@@ -45,7 +45,7 @@ class DataReader_Disk():
         if not os.path.exists(self.temp_latent_dir):
             os.makedirs(self.temp_latent_dir)
         self.source_dir = dataset_folder
-        self.all_imgs = [join(self.source_dir, f) for f in listdir(self.source_dir) if isfile(join(self.source_dir, f))]
+        self.all_imgs = [join(self.source_dir, f) for f in listdir(self.source_dir)]
         self.all_imgs.sort()
         if to_shuffle:
             random.seed(42)

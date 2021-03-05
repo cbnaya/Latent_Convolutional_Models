@@ -30,7 +30,8 @@ RESTRICT = True
 L2_W = 0.0
 RESTRICT_VAL = 0.01
 fname = "train_LCM"
-NUM_TRAIN_SAMPLES = 150000
+# NUM_TRAIN_SAMPLES = 150000
+NUM_TRAIN_SAMPLES = 150
 
 MODEL_NAME = 'CelebA150k_LCM_128'
 LOG_DIR = os.path.join("../runs", MODEL_NAME)
@@ -134,9 +135,9 @@ def trainZG(epoch, data_in, net_in, num_epochs=100):
         writer.add_scalar('Z_loss_lap', lap_loss.data.item(), epoch)
         writer.add_scalar('Z_loss_MSE', mse_loss.data.item(), epoch)
         if epoch%100 == 0:
-            writer.add_image('Real_Images', data_in[:5].data.cpu(), epoch)
-            writer.add_image('Generated_Images_Z', g_out[:5].data.cpu(), epoch)
-            writer.add_image('latent_Z', map_out[:10,:3,:,:].data.cpu(), epoch)
+            writer.add_image('Real_Images', vutils.make_grid(data_in[:5].data.cpu()), epoch)
+            writer.add_image('Generated_Images_Z', vutils.make_grid(g_out[:5].data.cpu()), epoch)
+            writer.add_image('latent_Z', vutils.make_grid(map_out[:10,:3,:,:].data.cpu()), epoch)
 
     return net_in
 
@@ -148,6 +149,7 @@ for epoch in range(START_EPOCH, END_EPOCH + 1):
 
     #train the latent networks and generator
     latent_nets = trainZG(epoch, data_in, latent_nets, num_epochs=50)
+    writer.flush()
 
     #update the latent networks
     data_reader.update_state(latent_nets, latent_net_ids)
